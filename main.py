@@ -3,6 +3,8 @@ from schema import StudentDetails
 from model import prediction
 import pandas as pd
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
@@ -14,9 +16,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.mount("/static", StaticFiles(directory="."), name="static")
+
 @app.get("/")
-def root() -> dict:
-    return {"message":"Working Properly"}
+def root():
+    return FileResponse("index.html")
 
 @app.post("/predict")
 def score_prediction(data:StudentDetails)->dict:
